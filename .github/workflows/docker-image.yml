@@ -1,18 +1,32 @@
-name: Docker Image CI
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+      - master
 
 jobs:
-
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: 
+      - self-hosted
+      - labelHost
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # - name: Build and test
+      #   run: |
+      #     # Add your build and test commands here
+      #     echo "Building and testing..."
+
+      - name: Set up .env file
+        run: |
+          echo "${{ secrets.ENV }}" > .env
+          attrib +r .env
+
+      - name: Build and run Docker Compose
+        run: |
+          # Build and run Docker Compose
+          docker compose up --build -d
+          docker image prune -f
