@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: 
       - self-hosted
-      - labelHost
+      - kyLabel
 
     steps:
       - name: Checkout code
